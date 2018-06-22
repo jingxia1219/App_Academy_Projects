@@ -1,4 +1,4 @@
-class Stack
+class Stack #LIFO last in first out 
     def initialize
       # create ivar to store stack here!
       @store = []
