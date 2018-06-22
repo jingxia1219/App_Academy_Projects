@@ -13,7 +13,7 @@ class Queue #FIFO first in first out
   end
 
   def peek
-    puts @store.last
+    puts @store.first
   end
 
 end
