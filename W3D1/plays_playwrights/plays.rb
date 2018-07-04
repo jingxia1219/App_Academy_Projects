@@ -16,7 +16,38 @@ class Play
 
   def self.all
     data = PlayDBConnection.instance.execute("SELECT * FROM plays")
-    data.map { |datum| Play.new(datum) }
+    data.map { |datum| Play.new(datum) } #ORM
+  end
+
+    def initialize(options) #options hash
+      @id = options['id'] # if @id doesn't exist, would rerturn
+      #defalt value null
+      @title = options['title']
+      @year = options['year']
+      @playwright_id = options['playwright_id']
+    end
+
+  def create #id would exist if entry exists in table as table generates id
+    raise "#{self} already in database" if @id
+    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id)
+      INSERT INTO
+        plays (title, year, playwright_id)
+      VALUES
+        (?, ?, ?)
+    SQL
+    @id = PlayDBConnection.instance.last_insert_row_id
+  end
+
+  def update
+    raise "#{self} not in database" unless @id
+    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id, @id)
+      UPDATE
+        plays
+      SET
+        title = ?, year = ?, playwright_id = ?
+      WHERE
+        id = ?
+    SQL
   end
 
   def self.find_by_title(title)
@@ -42,35 +73,6 @@ class Play
     SQL
   end
 
-  def initialize(options)
-    @id = options['id']
-    @title = options['title']
-    @year = options['year']
-    @playwright_id = options['playwright_id']
-  end
-
-  def create
-    raise "#{self} already in database" if @id
-    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id)
-      INSERT INTO
-        plays (title, year, playwright_id)
-      VALUES
-        (?, ?, ?)
-    SQL
-    @id = PlayDBConnection.instance.last_insert_row_id
-  end
-
-  def update
-    raise "#{self} not in database" unless @id
-    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id, @id)
-      UPDATE
-        plays
-      SET
-        title = ?, year = ?, playwright_id = ?
-      WHERE
-        id = ?
-    SQL
-  end
 end
 
 class Playwright

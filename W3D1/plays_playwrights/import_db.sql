@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS plays;
-
+-- create a table
 CREATE TABLE plays (
-  id INTEGER PRIMARY KEY,
-  title TEXT NOT NULL,
-  year INTEGER NOT NULL,
+  id INTEGER PRIMARY KEY, -- primary key is the identifier
+  title TEXT NOT NULL, -- means we need to have this piece info for every entry
+  year INTEGER NOT NULL, --mandatory info
   playwright_id INTEGER NOT NULL,
 
   FOREIGN KEY (playwright_id) REFERENCES playwrights(id)
@@ -16,7 +16,7 @@ CREATE TABLE playwrights (
   name TEXT NOT NULL,
   birth_year INTEGER
 );
-
+-- data manipulation language 
 INSERT INTO
   playwrights (name, birth_year)
 VALUES
