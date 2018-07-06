@@ -4,7 +4,7 @@ class Car < ActiveRecord::Base
     foreign_key: :owner_id,
     class_name: 'People'
 
-  has_one :house,
-    through: :people,
+  has_many :houses,
+    through: :owner,
     source: :House
 end
